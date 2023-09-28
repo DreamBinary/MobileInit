@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -110,6 +112,60 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+// TODO
+// class  extends StatefulWidget {
+//   const ({super.key});
+//
+//   @override
+//   State<> createState() => _State();
+// }
+//
+// class _State extends State<> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return const Placeholder();
+//   }
+// }
+
+class MyWidget extends StatelessWidget {
+  const MyWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Row(children: const [
+          ColorBlock(height: 100),
+          ColorBlock(height: 100),
+        ]),
+        Column(children: const [
+          ColorBlock(width: 100),
+          ColorBlock(width: 100),
+        ]),
+      ],
+    );
+  }
+}
+
+class ColorBlock extends StatelessWidget {
+  const ColorBlock({super.key, this.width, this.height});
+
+  final double? width;
+  final double? height;
+
+  @override
+  Widget build(BuildContext context) {
+    // random color
+    final Color color =
+        Colors.primaries[Random().nextInt(Colors.primaries.length)];
+    return Container(
+      color: color,
+      width: width ?? double.infinity,
+      height: height ?? double.infinity,
     );
   }
 }
