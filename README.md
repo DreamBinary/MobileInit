@@ -101,15 +101,23 @@
 
 ## Android  -> Kotlin
 
+[Android官网](https://developer.android.google.cn/guide?hl=zh-cn)
 
+[Jetpack Compose](https://developer.android.google.cn/jetpack?hl=zh-cn)
 
+[Kotlin文档](https://book.kotlincn.net/text/home.html)
 
+[扔物线](https://space.bilibili.com/27559447?spm_id_from=333.337.0.0)
 
 ## IOS  -> Swift
 
+[Swift语言学习](http://www.swift51.com/swift5.1/)
 
+[SwiftUI Tutorials](https://developer.apple.com/tutorials/swiftui)
 
+[Technologies | Apple Developer Documentation](https://developer.apple.com/documentation/technologies)
 
+[tca 框架](https://github.com/pointfreeco/swift-composable-architecture)
 
 ## Plugins
 
@@ -118,12 +126,6 @@ Android Studio
 <img src="img/plugins.jpg" width=300/>
 
 Xcode    "mac of lab"
-
-
-
-
-
-
 
 ## ScreenShot
 
