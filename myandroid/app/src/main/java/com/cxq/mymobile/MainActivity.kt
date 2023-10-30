@@ -62,8 +62,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyPage() {
     // TODO
-//    var cnt = 0
-    var cnt by remember { mutableStateOf(0) }
+    var cnt = 0
+//    var cnt by remember { mutableStateOf(0) }
     Scaffold(
         topBar = {
             Row(
