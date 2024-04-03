@@ -19,8 +19,10 @@ struct ContentView: View {
                     .padding(.bottom)
                 Spacer()
             }.background(.blue)
-
-            MyBody()
+            Spacer()
+            MyAnim()
+            //            MyBody()
+            Spacer()
         }
     }
 }
@@ -62,8 +64,31 @@ struct MyBody: View {
                         .clipShape(Circle())
                 }.padding(.bottom, 32)
             }.padding(.trailing, 32)
-
         }.edgesIgnoringSafeArea(.all)
+    }
+}
+
+struct MyAnim: View {
+    @State var size: CGFloat = 100
+    @State var degree: Double = 0
+    @State var cornerRadius: CGFloat = 0
+    
+    var body: some View {
+        ZStack {
+            Rectangle()
+                .frame(width: size, height: size)
+                .rotationEffect(.degrees(degree))
+                .cornerRadius(cornerRadius)
+                .background(Color.red)
+                .onTapGesture {
+                    //                size = size == 50 ? 100 : 50
+                    withAnimation(.easeInOut(duration: 1)) {
+                        degree += 90
+                        //                    size = size == 200 ? 100 : 200
+                        cornerRadius = cornerRadius == 0 ? 25 : 0
+                    }
+                }
+        }
     }
 }
 
@@ -72,7 +97,7 @@ struct ColorBlock: View {
         Color.red, Color.green, Color.blue, Color.yellow,
         Color.orange, Color.purple, Color.pink, Color.gray, Color.black
     ]
-
+    
     var body: some View {
         Rectangle()
             .fill(colors.randomElement() ?? Color.red)

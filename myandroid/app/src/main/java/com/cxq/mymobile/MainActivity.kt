@@ -4,7 +4,11 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,8 +17,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -29,12 +33,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -95,7 +101,8 @@ fun MyPage() {
             }
         },
     ) {
-        MyWidget(cnt = cnt)
+//        MyWidget(cnt = cnt)
+        MyAnim()
     }
 }
 
@@ -124,9 +131,59 @@ fun MyWidget(cnt: Int) {
     }
 }
 
+@Composable
+fun MyAnim() {
+    var anim by remember {
+        mutableStateOf(true)
+    }
+    val time = 1000
+    val animatedAlpha by animateFloatAsState(
+        targetValue = if (anim) 1.0f else 0.5f,
+        animationSpec = tween(durationMillis = time),
+        label = "alpha"
+    )
+    val animatedSize by animateDpAsState(
+        targetValue = if (anim) 100.dp else 50.dp,
+        label = "size",
+        animationSpec = tween(durationMillis = time)
+    )
+
+    val animatedDegree by animateFloatAsState(
+        targetValue = if (anim) 0f else 360f,
+        label = "degree",
+        animationSpec = tween(durationMillis = time)
+    )
+
+    val animatedCornerShape by animateDpAsState(
+        targetValue = if (anim) 0.dp else 50.dp,
+        label = "corner",
+        animationSpec = tween(durationMillis = time)
+    )
+
+    Box(
+        Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+
+        ColorBlock(
+            Modifier
+                .size(100.dp)
+                .clipToBounds()
+                .graphicsLayer {
+                    alpha = animatedAlpha
+                }
+                .rotate(animatedDegree)
+                .clip(RoundedCornerShape(animatedCornerShape))
+                .clickable {
+                    anim = !anim
+                }
+        )
+    }
+
+}
 
 @Composable
-fun ColorBlock(modifier: Modifier = Modifier) {
+fun ColorBlock(modifier: Modifier = Modifier, color: Color? = null) {
     // random color
     val colors = listOf(
         Color.Red,
@@ -140,10 +197,10 @@ fun ColorBlock(modifier: Modifier = Modifier) {
         Color.LightGray,
         Color.DarkGray,
     )
-    val color = colors.random()
+
     Surface(
         modifier = modifier.fillMaxSize(),
-        color = color
+        color = color ?: colors.random()
     ) { }
 }
 
