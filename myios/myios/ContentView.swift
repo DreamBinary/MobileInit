@@ -20,8 +20,8 @@ struct ContentView: View {
                 Spacer()
             }.background(.blue)
             Spacer()
-            MyAnim()
-            //            MyBody()
+//            MyAnim()
+            MyBody()
             Spacer()
         }
     }
@@ -75,7 +75,7 @@ struct MyAnim: View {
     
     var body: some View {
         ZStack {
-            Rectangle()
+            ColorBlock()
                 .frame(width: size, height: size)
                 .rotationEffect(.degrees(degree))
                 .cornerRadius(cornerRadius)
@@ -101,7 +101,6 @@ struct ColorBlock: View {
     var body: some View {
         Rectangle()
             .fill(colors.randomElement() ?? Color.red)
-            .frame(width: .infinity, height: .infinity)
     }
 }
 

@@ -68,8 +68,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyPage() {
     // TODO
-    var cnt = 0
-//    var cnt by remember { mutableStateOf(0) }
+//    var cnt = 0
+    var cnt by remember { mutableStateOf(0) }
     Scaffold(
         topBar = {
             Row(
@@ -164,19 +164,19 @@ fun MyAnim() {
         Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-
         ColorBlock(
-            Modifier
+            modifier = Modifier
                 .size(100.dp)
                 .clipToBounds()
-                .graphicsLayer {
-                    alpha = animatedAlpha
-                }
+//                .graphicsLayer {
+//                    alpha = animatedAlpha
+//                }
                 .rotate(animatedDegree)
                 .clip(RoundedCornerShape(animatedCornerShape))
                 .clickable {
                     anim = !anim
-                }
+                },
+            color = Color.Black
         )
     }
 
