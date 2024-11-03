@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -26,15 +24,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,17 +52,37 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainPage() {
+    var currentPage by remember { mutableIntStateOf(0) }
+    val homeViewModel = HomeViewModel()
+    val pages: List<@Composable () -> Unit> = listOf(
+        { HomePage(homeViewModel) },
+        { BuyPage() },
+        { MsgPage() },
+        { MinePage() }
+    )
+
     Scaffold(
-        bottomBar = { BottomBar() },
+        bottomBar = {
+            BottomBar(onChange = {
+                currentPage = it
+            })
+        },
         contentWindowInsets = WindowInsets.safeContent
-    ) {
-        Home()
+    ) { paddingValues ->
+        pages[currentPage]()
+//        when (currentPage) {
+//            0 -> HomePage()
+//            1 -> BuyPage()
+//            2 -> MsgPage()
+//            3 -> MinePage()
+//        }
     }
 }
 
 
 @Composable
-fun BottomBar() {
+fun BottomBar(onChange: (Int) -> Unit = {}) {
+    var selected by remember { mutableIntStateOf(0) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -75,16 +91,25 @@ fun BottomBar() {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        val itemWidth = (LocalContext.current.resources.displayMetrics.widthPixels / 5).dp
-        val modifier = Modifier
+        TabBtn(onClick = {
+            onChange(0)
+            selected = 0
+        }, text = "首页", isSelected = selected == 0)
+        TabBtn(onClick = {
+            onChange(1)
+            selected = 1
+        }, text = "购物", isSelected = selected == 1)
 
-        TabBtn(onClick = { }, text = "首页")
-        TabBtn(onClick = { }, text = "购物", isSelected = true)
+        AddBtn(onClick = { })
 
-        AddBtn()
-
-        TabBtn(onClick = { }, text = "消息")
-        TabBtn(onClick = { }, text = "我")
+        TabBtn(onClick = {
+            onChange(2)
+            selected = 2
+        }, text = "消息", isSelected = selected == 2)
+        TabBtn(onClick = {
+            onChange(3)
+            selected = 3
+        }, text = "我", isSelected = selected == 3)
 
 
 //        Text("首页")
@@ -98,9 +123,7 @@ fun BottomBar() {
 }
 
 @Composable
-fun AddBtn() {
-
-
+fun AddBtn(onClick: () -> Unit) {
     IconButton(
         modifier = Modifier
             .padding(5.dp)
@@ -112,7 +135,8 @@ fun AddBtn() {
             disabledContainerColor = Color.Transparent,
             disabledContentColor = Color.Black
         ),
-        onClick = { }) {
+        onClick = onClick
+    ) {
         Icon(Icons.Default.Add, contentDescription = null)
     }
 }
@@ -120,12 +144,8 @@ fun AddBtn() {
 
 @Composable
 fun TabBtn(onClick: () -> Unit, text: String, isSelected: Boolean = false) {
-    var isSelected by remember { mutableStateOf(isSelected) }
     TextButton(
-        onClick = {
-            onClick()
-            isSelected = !isSelected
-        },
+        onClick = onClick,
         contentPadding = PaddingValues(0.dp),
     ) {
         Text(
@@ -134,12 +154,6 @@ fun TabBtn(onClick: () -> Unit, text: String, isSelected: Boolean = false) {
             fontSize = if (isSelected) 18.sp else 16.sp
         )
     }
-}
-
-
-@Composable
-fun Home() {
-    Text("Home")
 }
 
 
