@@ -17,16 +17,47 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class HomeViewModel : ViewModel() {
     //    val text = mutableStateOf("Welcome to Home Page")
     var scrollState: ScrollState = ScrollState(0)
+
+    val columns = 2
+
+    //    val columnItems = List(columns) { mutableListOf<String>() }
+    var columnItems = mutableStateOf(List(columns) { mutableListOf<String>() })
+
+    init {
+        init()
+    }
+
+    // load from network async
+    fun load(): List<MutableList<String>> {
+        val items = List(100) { "Item $it" }
+        val columnItems = List(columns) { mutableListOf<String>() }
+        items.forEachIndexed { index, item ->
+            columnItems[index % columns].add(item)
+        }
+        return columnItems
+    }
+
+
+    fun init() {
+        viewModelScope.launch {
+            // sleep 1s to simulate network request
+            kotlinx.coroutines.delay(2000)
+            columnItems.value = load()
+        }
+    }
 }
 
 
@@ -36,18 +67,10 @@ fun HomePage(viewModel: HomeViewModel) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val items = List(100) { "Item $it" }
-        val columns = 2
-        val columnItems = List(columns) { mutableListOf<String>() }
-
-        items.forEachIndexed { index, item ->
-            columnItems[index % columns].add(item)
-        }
-
         Row(
             modifier = Modifier.verticalScroll(viewModel.scrollState)
         ) {
-            columnItems.forEach { column ->
+            viewModel.columnItems.value.forEach { column ->
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
